@@ -1,6 +1,6 @@
 from pathlib import Path
 from ftplib import FTP
-import io, sys, time
+import io, sys, time, os
 from utils import file_md5sum
 
 from wasabi import msg
@@ -15,6 +15,7 @@ base_url = "ftp.ncbi.nlm.nih.gov"
 
 ftp_name = "baseline"
 ftp_dest = f"/pubmed/{ftp_name}"
+# https://ftp.ncbi.nlm.nih.gov/pubmed/baseline/
 
 
 def download_ftp(f0, f1):
@@ -51,7 +52,7 @@ def check_hash(f0):
 
 if __name__ == "__main__":
 
-    f0 = Path("data") / f"PUBMED_ftp_{ftp_name}.csv"
+    f0 = Path("/data/pubmed") / f"PUBMED_ftp_{ftp_name}.csv"
     df = pd.read_csv(f0)
 
     # Only look for the files
@@ -62,7 +63,7 @@ if __name__ == "__main__":
 
     P = Pipe(
         source=F_MD5,
-        dest=f"data/{ftp_name}/md5",
+        dest=f"/data/pubmed/{ftp_name}/md5",
         output_suffix=".md5",
         shuffle=True,
     )(download_ftp, 16)
@@ -72,14 +73,14 @@ if __name__ == "__main__":
 
     P = Pipe(
         source=F_GZ,
-        dest=f"data/{ftp_name}/gz",
+        dest=f"/data/pubmed/{ftp_name}/gz",
         output_suffix=".gz",
         shuffle=True,
     )(download_ftp, 2)
 
     # Read the expected hash
     md5 = dict()
-    for f in Path(f"data/{ftp_name}/md5").glob("*.md5"):
+    for f in Path(f"/data/pubmed/{ftp_name}/md5").glob("*.md5"):
         with open(f) as FIN:
             line = FIN.readline()
             name, hx = line.split()
@@ -87,7 +88,7 @@ if __name__ == "__main__":
             md5[name] = hx
 
     # Check the hashes
-    P = Pipe(source=f"data/{ftp_name}/gz", output_suffix=".gz", shuffle=False)(
+    P = Pipe(source=f"/data/pubmed/{ftp_name}/gz", output_suffix=".gz", shuffle=False)(
         check_hash, -1
     )
 

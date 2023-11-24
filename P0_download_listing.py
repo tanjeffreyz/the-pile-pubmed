@@ -8,7 +8,7 @@ import utils
 
 base_url = "ftp.ncbi.nlm.nih.gov"
 days_to_update = 1
-save_dest = Path("data/")
+save_dest = Path("/data/pubmed")
 
 
 def update_listing(dest, f_save):

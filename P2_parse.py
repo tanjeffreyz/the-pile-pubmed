@@ -67,8 +67,8 @@ def safe_compute(*args):
 
 
 P = Pipe(
-    source="data/baseline/gz",
-    dest="data/baseline/parsed",
+    source="/data/pubmed/baseline/gz",
+    dest="/data/pubmed/baseline/parsed",
     input_suffix=".gz",
     output_suffix=".jsonl",
     shuffle=True,

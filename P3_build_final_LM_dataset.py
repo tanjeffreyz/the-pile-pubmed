@@ -11,7 +11,7 @@ stats = {
     "filtered_out": 0,
 }
 
-f_save = "data/PUBMED_title_abstracts_2020_baseline.jsonl"
+f_save = "/data/pubmed/PUBMED_title_abstracts_2020_baseline.jsonl"
 FOUT = jsonlines.open(f_save, mode="w")
 
 meta_columns = ["pmid", "language"]
@@ -45,7 +45,7 @@ def compute(f0):
             FOUT.write(item)
 
 
-P = Pipe(source="data/baseline/parsed/", input_suffix=".jsonl", shuffle=True)
+P = Pipe(source="/data/pubmed/baseline/parsed/", input_suffix=".jsonl", shuffle=True)
 
 P(compute, 1)
 msg.good(f"Saved to {f_save}")
